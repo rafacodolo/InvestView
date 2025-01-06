@@ -10,24 +10,52 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Últimos Preços e Indicadores das Ações</h1>
-    <div style="text-align: center;">
-        <button onclick="location.href='{{ url_for('update') }}'">Atualizar Dados</button>
-        <button id="toggleFilter">Mostrar Filtros</button>
+    <div class="container">
+        <h1 class="text-center my-4">Últimos Preços e Indicadores das Ações</h1>
+        <div class="tabs">
+            <button class="tablink" onclick="openTab(event, 'Preco')">Preço</button>
+            <button class="tablink" onclick="openTab(event, 'Desempenho')">Desempenho</button>
+            <button class="tablink" onclick="openTab(event, 'Tecnica')">Técnica</button>
+            <button class="tablink" onclick="openTab(event, 'Fundamentalista')">Fundamentalista</button>
+        </div>
+
+        <div id="Preco" class="tabcontent">
+            <div class="text-center mb-4">
+                <button class="btn btn-primary" onclick="location.href='{{ url_for('update') }}'">Atualizar Dados</button>
+                <button class="btn btn-secondary" id="toggleFilter">Mostrar Filtros</button>
+            </div>
+            <div class="filter-container mb-4" id="filterContainer">
+                <input type="text" class="form-control mb-2" id="filterSymbol" placeholder="Filtrar por Símbolo">
+                <input type="number" class="form-control mb-2" id="filterPrice" placeholder="Filtrar por Preço">
+                <input type="number" class="form-control mb-2" id="filterRSI" placeholder="Filtrar por RSI">
+                <input type="number" class="form-control mb-2" id="filterMarketCap" placeholder="Filtrar por Valor de Mercado (B)">
+                <input type="number" class="form-control mb-2" id="filterPERatio" placeholder="Filtrar por P/L">
+                <input type="number" class="form-control mb-2" id="filterDayChange" placeholder="Filtrar por Variação do Dia (%)">
+                <input type="text" class="form-control mb-2" id="filterSector" placeholder="Filtrar por Setor">
+                <input type="text" class="form-control mb-2" id="filterIndustry" placeholder="Filtrar por Indústria">
+                <div class="text-center">
+                    <button class="btn btn-primary" id="applyFilters">Aplicar Filtros</button>
+                    <button class="btn btn-secondary" id="clearFilters">Limpar Filtros</button>
+                </div>
+            </div>
+            <div id="priceTable" class="table-responsive"></div>
+        </div>
+
+        <div id="Desempenho" class="tabcontent">
+            <h3>Desempenho</h3>
+            <p>Conteúdo da tabela de Desempenho.</p>
+        </div>
+
+        <div id="Tecnica" class="tabcontent">
+            <h3>Técnica</h3>
+            <p>Conteúdo da tabela Técnica.</p>
+        </div>
+
+        <div id="Fundamentalista" class="tabcontent">
+            <h3>Fundamentalista</h3>
+            <p>Conteúdo da tabela Fundamentalista.</p>
+        </div>
     </div>
-    <div class="filter-container" id="filterContainer">
-        <input type="text" id="filterSymbol" placeholder="Filtrar por Símbolo">
-        <input type="number" id="filterPrice" placeholder="Filtrar por Preço">
-        <input type="number" id="filterRSI" placeholder="Filtrar por RSI">
-        <input type="number" id="filterMarketCap" placeholder="Filtrar por Valor de Mercado (B)">
-        <input type="number" id="filterPERatio" placeholder="Filtrar por P/L">
-        <input type="number" id="filterDayChange" placeholder="Filtrar por Variação do Dia (%)">
-        <input type="text" id="filterSector" placeholder="Filtrar por Setor">
-        <input type="text" id="filterIndustry" placeholder="Filtrar por Indústria">
-        <button id="applyFilters">Aplicar Filtros</button>
-        <button id="clearFilters">Limpar Filtros</button>
-    </div>
-    <div id="stocksTable"></div>
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -36,17 +64,18 @@
     <!-- Custom JS -->
     <script>
         $(document).ready(function() {
-            var table = new Tabulator("#stocksTable", {
+            var priceTable = new Tabulator("#priceTable", {
                 layout: "fitColumns",
                 columns: [
-                    {title: "Símbolo", field: "symbol"},
-                    {title: "Preço", field: "price"},
-                    {title: "RSI", field: "rsi"},
-                    {title: "Valor de Mercado (B)", field: "market_cap"},
-                    {title: "P/L", field: "pe_ratio"},
-                    {title: "Variação do Dia (%)", field: "day_change"},
-                    {title: "Setor", field: "sector"},
-                    {title: "Indústria", field: "industry"}
+                    {title: "Ticker", field: "symbol"},
+                    {title: "Nome Amigável", field: "friendly_name"},
+                    {title: "Último", field: "last_price"},
+                    {title: "Máxima", field: "high"},
+                    {title: "Mínima", field: "low"},
+                    {title: "Variação", field: "change_real"},
+                    {title: "Var. %", field: "change_percent"},
+                    {title: "Vol.", field: "volume"},
+                    {title: "Hora", field: "date"}
                 ],
                 ajaxURL: "{{ url_for('get_stock_data') }}",
                 ajaxResponse: function(url, params, response) {
@@ -101,7 +130,7 @@
                     filters.push({field: "industry", type: "like", value: industry});
                 }
 
-                table.setFilter(filters);
+                priceTable.setFilter(filters);
             });
 
             $("#clearFilters").click(function() {
@@ -114,9 +143,26 @@
                 $("#filterSector").val("");
                 $("#filterIndustry").val("");
                 
-                table.clearFilter();
+                priceTable.clearFilter();
             });
         });
+
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // Open the default tab
+        document.getElementsByClassName("tablink")[0].click();
     </script>
 </body>
 </html>

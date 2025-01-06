@@ -22,22 +22,33 @@ def fetch_stock_data():
         data['RSI'] = ta.rsi(data['Close'], length=14)
         
         last_price = round(data['Close'].iloc[-1], 2)
-        rsi = round(data['RSI'].iloc[-1], 2)
+        high = round(data['High'].iloc[-1], 2)
+        low = round(data['Low'].iloc[-1], 2)
+        change_real = round(data['Close'].iloc[-1] - data['Close'].iloc[-2], 2)
+        change_percent = round((data['Close'].iloc[-1] - data['Close'].iloc[-2]) / data['Close'].iloc[-2] * 100, 2)
+        volume = int(data['Volume'].iloc[-1])
+        date = data.index[-1].strftime('%Y-%m-%d')
         
         # Dados adicionais
+        friendly_name = stock.info.get('shortName', 'N/A')
         market_cap = round(stock.info['marketCap'] / 1e9, 2)  # Valor de mercado em bilhões
         pe_ratio = round(stock.info['trailingPE'], 2) if 'trailingPE' in stock.info else None
-        day_change = round((data['Close'].iloc[-1] - data['Close'].iloc[-2]) / data['Close'].iloc[-2] * 100, 2)
         sector = stock.info.get('sector', 'N/A')
         industry = stock.info.get('industry', 'N/A')
         
         stocks.append({
             'symbol': symbol,
-            'price': last_price,
-            'rsi': rsi,
+            'friendly_name': friendly_name,
+            'last_price': last_price,
+            'high': high,
+            'low': low,
+            'change_real': change_real,
+            'change_percent': change_percent,
+            'volume': volume,
+            'date': date,
+            'rsi': round(data['RSI'].iloc[-1], 2),
             'market_cap': market_cap,
             'pe_ratio': pe_ratio,
-            'day_change': day_change,
             'sector': sector,
             'industry': industry
         })
