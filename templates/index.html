@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoramento de Ações</title>
+    <!-- Tabulator CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/tabulator-tables@5.0.7/dist/css/tabulator.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Últimos Preços e Indicadores das Ações</h1>
+    <div style="text-align: center;">
+        <button onclick="location.href='{{ url_for('update') }}'">Atualizar Dados</button>
+        <button id="toggleFilter">Mostrar Filtros</button>
+    </div>
+    <div class="filter-container" id="filterContainer">
+        <input type="text" id="filterSymbol" placeholder="Filtrar por Símbolo">
+        <input type="number" id="filterPrice" placeholder="Filtrar por Preço">
+        <input type="number" id="filterRSI" placeholder="Filtrar por RSI">
+        <input type="number" id="filterMarketCap" placeholder="Filtrar por Valor de Mercado (B)">
+        <input type="number" id="filterPERatio" placeholder="Filtrar por P/L">
+        <input type="number" id="filterDayChange" placeholder="Filtrar por Variação do Dia (%)">
+        <input type="text" id="filterSector" placeholder="Filtrar por Setor">
+        <input type="text" id="filterIndustry" placeholder="Filtrar por Indústria">
+        <button id="applyFilters">Aplicar Filtros</button>
+        <button id="clearFilters">Limpar Filtros</button>
+    </div>
+    <div id="stocksTable"></div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Tabulator JS -->
+    <script src="https://unpkg.com/tabulator-tables@5.0.7/dist/js/tabulator.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        $(document).ready(function() {
+            var table = new Tabulator("#stocksTable", {
+                layout: "fitColumns",
+                columns: [
+                    {title: "Símbolo", field: "symbol"},
+                    {title: "Preço", field: "price"},
+                    {title: "RSI", field: "rsi"},
+                    {title: "Valor de Mercado (B)", field: "market_cap"},
+                    {title: "P/L", field: "pe_ratio"},
+                    {title: "Variação do Dia (%)", field: "day_change"},
+                    {title: "Setor", field: "sector"},
+                    {title: "Indústria", field: "industry"}
+                ],
+                ajaxURL: "{{ url_for('get_stock_data') }}",
+                ajaxResponse: function(url, params, response) {
+                    return response.stocks;
+                }
+            });
+
+            $("#toggleFilter").click(function() {
+                $("#filterContainer").toggle();
+            });
+
+            $("#applyFilters").click(function() {
+                var filters = [];
+
+                var symbol = $("#filterSymbol").val();
+                if (symbol) {
+                    filters.push({field: "symbol", type: "like", value: symbol});
+                }
+
+                var price = $("#filterPrice").val();
+                if (price) {
+                    filters.push({field: "price", type: ">", value: price});
+                }
+
+                var rsi = $("#filterRSI").val();
+                if (rsi) {
+                    filters.push({field: "rsi", type: ">", value: rsi});
+                }
+
+                var marketCap = $("#filterMarketCap").val();
+                if (marketCap) {
+                    filters.push({field: "market_cap", type: ">", value: marketCap});
+                }
+
+                var peRatio = $("#filterPERatio").val();
+                if (peRatio) {
+                    filters.push({field: "pe_ratio", type: ">", value: peRatio});
+                }
+
+                var dayChange = $("#filterDayChange").val();
+                if (dayChange) {
+                    filters.push({field: "day_change", type: ">", value: dayChange});
+                }
+
+                var sector = $("#filterSector").val();
+                if (sector) {
+                    filters.push({field: "sector", type: "like", value: sector});
+                }
+
+                var industry = $("#filterIndustry").val();
+                if (industry) {
+                    filters.push({field: "industry", type: "like", value: industry});
+                }
+
+                table.setFilter(filters);
+            });
+
+            $("#clearFilters").click(function() {
+                $("#filterSymbol").val("");
+                $("#filterPrice").val("");
+                $("#filterRSI").val("");
+                $("#filterMarketCap").val("");
+                $("#filterPERatio").val("");
+                $("#filterDayChange").val("");
+                $("#filterSector").val("");
+                $("#filterIndustry").val("");
+                
+                table.clearFilter();
+            });
+        });
+    </script>
+</body>
+</html>

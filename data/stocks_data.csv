@@ -1,0 +1,11 @@
+symbol,price,rsi,market_cap,pe_ratio,day_change,sector,industry
+PETR4.SA,36.38,49.86,498.66,4.62,-1.06,Energy,Oil & Gas Integrated
+VALE3.SA,53.24,29.29,227.27,4.01,-1.86,Basic Materials,Other Industrial Metals & Mining
+ITUB4.SA,29.82,27.68,275.02,7.53,-2.45,Financial Services,Banks - Regional
+BBDC4.SA,11.2,37.2,114.14,8.62,-1.59,Financial Services,Banks - Regional
+ABEV3.SA,11.33,14.91,178.2,12.88,-2.33,Consumer Defensive,Beverages - Brewers
+BBAS3.SA,23.74,38.06,135.51,3.68,-0.75,Financial Services,Banks - Regional
+B3SA3.SA,10.1,58.14,53.52,12.95,-0.98,Financial Services,Financial Data & Stock Exchanges
+WEGE3.SA,52.46,30.65,220.1,36.18,-0.49,Industrials,Specialty Industrial Machinery
+RENT3.SA,32.28,41.62,34.01,20.43,0.25,Industrials,Rental & Leasing Services
+MGLU3.SA,6.26,21.81,4.61,10.1,-2.64,Consumer Cyclical,Specialty Retail

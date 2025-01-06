@@ -1,0 +1,103 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f4f4f4;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+button {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#toggleFilter {
+    margin-bottom: 20px;
+}
+
+.filter-container {
+    display: none;
+    margin-bottom: 20px;
+    text-align: center;
+    background-color: #fff;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter-container input {
+    margin: 5px;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px;
+}
+
+.filter-container button {
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    margin: 5px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.filter-container button:hover {
+    background-color: #0056b3;
+}
+
+#stocksTable {
+    margin-top: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tabulator-header {
+    background-color: #007bff;
+    color: white;
+}
+
+.tabulator-row {
+    border-bottom: 1px solid #ddd;
+}
+
+.tabulator-row:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.tabulator-row:hover {
+    background-color: #f1f1f1;
+}
+
+.tabulator-cell {
+    padding: 10px;
+    text-align: center;
+    border-right: 1px solid #ddd;
+}
+
+.tabulator-cell:last-child {
+    border-right: none;
+}
