@@ -1,1 +1,1 @@
-teste
+print(2)
